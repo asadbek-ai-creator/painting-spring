@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Филиалы — Paint Spring</title>
+<meta name="description" content="Paint Spring — адреса складов и офисов в Нукусе. Строительные и отделочные материалы оптом и в розницу.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --navy:#1A2E6C;
+  --red:#D94F3D;
+  --red-ink:#B83A2A;
+  --red-soft:#FF8A72;
+  --cream:#F5F0E8;
+  --beige:#E8DFD0;
+  --ink:#333333;
+  --gray:#666666;
+  --white:#FFFFFF;
+  --nav-h:74px;
+  --max:1200px;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:var(--nav-h)}
+body{font-family:'DM Sans',sans-serif;font-weight:400;color:var(--ink);background:var(--cream);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 40px}
+h1,h2,h3{font-family:'Barlow Condensed',sans-serif;line-height:.95;letter-spacing:.5px}
+a{color:inherit;text-decoration:none}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;width:100%;z-index:1000;height:var(--nav-h);display:flex;align-items:center;background:rgba(26,46,108,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 6px 30px rgba(26,46,108,.18)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;width:100%}
+.logo{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.7rem;letter-spacing:1px;text-transform:uppercase;color:var(--white);display:flex;align-items:baseline;gap:3px;line-height:1}
+.logo span{color:var(--red)}
+.nav-links{display:flex;align-items:center;gap:38px}
+.nav-links a{font-weight:400;font-size:.86rem;letter-spacing:.04em;color:rgba(255,255,255,.82);position:relative;padding:6px 0;transition:color .25s}
+.nav-links a::after{content:"";position:absolute;left:0;bottom:0;width:0;height:2px;background:var(--red);transition:width .3s var(--ease)}
+.nav-links a:hover{color:var(--white)}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-links a.active{color:var(--white)}
+.nav-cta{font-weight:500;font-size:.82rem;letter-spacing:.05em;color:var(--white)!important;border:1px solid rgba(255,255,255,.4);padding:10px 22px;transition:all .25s var(--ease)}
+.nav-cta::after{display:none!important}
+.nav-cta:hover{background:var(--red);border-color:var(--red)}
+.nav-toggle{display:none;background:none;border:1px solid rgba(255,255,255,.4);color:var(--white);font-family:'DM Sans',sans-serif;font-weight:500;font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;padding:10px 16px;cursor:pointer;transition:all .25s}
+.nav-toggle:hover{background:var(--red);border-color:var(--red)}
+
+/* PAGE HERO */
+.page-hero{background:var(--navy);color:var(--white);padding-top:var(--nav-h);position:relative;overflow:hidden}
+.page-hero::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 80% 50%,rgba(217,79,61,.14),transparent 50%),repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 1px,transparent 1px 90px);pointer-events:none}
+.page-hero-ghost{position:absolute;right:-2vw;bottom:-4vh;font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22vw;line-height:.7;color:rgba(255,255,255,.03);letter-spacing:-.04em;pointer-events:none;user-select:none}
+.page-hero .wrap{position:relative;z-index:2;padding-top:80px;padding-bottom:80px}
+.eyebrow{font-family:'DM Sans',sans-serif;font-weight:500;font-size:.72rem;letter-spacing:.32em;text-transform:uppercase;color:var(--red-soft);display:inline-flex;align-items:center;gap:14px}
+.eyebrow::before{content:"";width:34px;height:2px;background:var(--red)}
+.page-hero h1{font-weight:900;font-size:clamp(3rem,7vw,5.8rem);text-transform:uppercase;margin-top:18px;max-width:16ch}
+.page-hero .lead{font-weight:300;font-size:clamp(1rem,1.5vw,1.2rem);color:rgba(255,255,255,.75);max-width:52ch;margin-top:22px}
+
+/* BRANCHES SECTION */
+.branches{background:var(--cream);padding:100px 0}
+.branches-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:56px}
+
+.branch-card{background:var(--white);position:relative;overflow:hidden;transition:transform .4s var(--ease),box-shadow .4s var(--ease)}
+.branch-card:hover{transform:translateY(-8px);box-shadow:0 28px 52px -22px rgba(26,46,108,.38)}
+.branch-card::before{content:"";position:absolute;top:0;left:0;width:100%;height:5px;background:var(--red)}
+
+.branch-img{width:100%;height:180px;object-fit:cover;display:block}
+.branch-img-placeholder{width:100%;height:180px;background:linear-gradient(135deg,var(--navy) 0%,#2a4499 100%);display:flex;align-items:center;justify-content:center}
+.branch-img-placeholder span{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:5rem;color:rgba(255,255,255,.08);letter-spacing:-.04em;user-select:none}
+
+.branch-body{padding:32px 34px 36px}
+.branch-badge{font-weight:500;font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--red-ink);display:block;margin-bottom:10px}
+.branch-card h3{font-weight:900;font-size:1.9rem;text-transform:uppercase;color:var(--navy);margin-bottom:6px;line-height:1}
+.branch-district{font-weight:300;font-size:.94rem;color:var(--gray);margin-bottom:24px}
+
+.branch-rows{border-top:1px solid var(--beige);padding-top:20px;display:grid;gap:14px}
+.branch-row .lbl{font-weight:500;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--red-ink);margin-bottom:3px}
+.branch-row .val{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1.35rem;color:var(--ink);line-height:1.15}
+.branch-row .val a{transition:color .25s}
+.branch-row .val a:hover{color:var(--red)}
+.branch-row .sub{font-weight:300;font-size:.86rem;color:var(--gray);margin-top:2px}
+
+.branch-cta{display:inline-flex;align-items:center;gap:10px;margin-top:26px;background:var(--navy);color:var(--white);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.08em;text-transform:uppercase;padding:13px 26px;transition:all .3s var(--ease)}
+.branch-cta:hover{background:var(--red)}
+
+/* SOCIALS STRIP */
+.socials-strip{background:var(--beige);padding:60px 0}
+.socials-strip .wrap{display:flex;align-items:center;justify-content:space-between;gap:32px;flex-wrap:wrap}
+.socials-strip .left h2{font-weight:900;font-size:clamp(1.8rem,3vw,2.6rem);text-transform:uppercase;color:var(--navy);line-height:1}
+.socials-strip .left p{font-weight:300;font-size:.96rem;color:var(--gray);margin-top:8px}
+.social-links{display:flex;flex-wrap:wrap;gap:14px}
+.social-btn{display:inline-flex;align-items:center;gap:10px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.08em;text-transform:uppercase;padding:14px 26px;border:1px solid;transition:all .3s var(--ease)}
+.social-btn.insta{color:var(--navy);border-color:var(--navy)}
+.social-btn.insta:hover{background:var(--navy);color:var(--white)}
+.social-btn.phone{background:var(--red);color:var(--white);border-color:var(--red)}
+.social-btn.phone:hover{background:var(--navy);border-color:var(--navy)}
+
+/* MAP SECTION */
+.map-section{background:var(--navy);padding:80px 0}
+.map-section .section-head{margin-bottom:40px}
+.map-section .eyebrow{color:var(--red-soft)}
+.map-section h2{font-weight:900;font-size:clamp(2rem,4vw,3.2rem);text-transform:uppercase;color:var(--white);margin-top:14px;line-height:.95}
+.map-wrapper{border:1px solid rgba(255,255,255,.12);overflow:hidden;position:relative}
+.map-wrapper iframe{display:block;width:100%;height:420px;border:none;filter:grayscale(20%) contrast(1.1)}
+.map-overlay-badge{position:absolute;top:20px;left:20px;background:var(--navy);color:var(--white);padding:12px 20px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.06em;text-transform:uppercase;pointer-events:none}
+.map-overlay-badge span{color:var(--red)}
+
+/* FOOTER */
+.footer{background:#13204d;color:rgba(255,255,255,.6);padding:50px 0}
+.footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+.footer .logo{font-size:1.4rem}
+.footer-meta{font-weight:300;font-size:.84rem;letter-spacing:.03em;text-align:center}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(36px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.reveal.in{opacity:1;transform:translateY(0)}
+.reveal.d1{transition-delay:.08s}
+.reveal.d2{transition-delay:.16s}
+.reveal.d3{transition-delay:.24s}
+
+/* RESPONSIVE */
+@media(max-width:960px){
+  .wrap{padding:0 24px}
+  .nav-toggle{display:inline-block}
+  .nav-links{position:fixed;top:var(--nav-h);left:0;width:100%;flex-direction:column;align-items:flex-start;gap:0;background:var(--navy);padding:0 24px;max-height:0;overflow:hidden;transition:max-height .4s var(--ease),padding .4s var(--ease)}
+  .nav-links.open{max-height:480px;padding:14px 24px 28px}
+  .nav-links a{width:100%;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:1rem}
+  .nav-cta{margin-top:16px;text-align:center;width:100%;background:var(--red);border-color:var(--red)}
+  .branches-grid{grid-template-columns:1fr}
+  .branches{padding:70px 0}
+  .socials-strip .wrap{flex-direction:column;align-items:flex-start}
+  .footer .wrap{flex-direction:column;text-align:center}
+  .map-wrapper iframe{height:300px}
+}
+@media(max-width:520px){
+  .page-hero .wrap{padding-top:56px;padding-bottom:56px}
+  .branch-body{padding:24px 22px 28px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001s!important;transition-duration:.001s!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="wrap">
+    <a href="/" class="logo">PAINT<span>SPRING</span></a>
+    <div class="nav-links" id="navLinks">
+      <a href="/#about">О нас</a>
+      <a href="/#catalog">Каталог</a>
+      <a href="/#why">Преимущества</a>
+      <a href="/#partners">Партнёры</a>
+      <a href="filial.html" class="active">Филиалы</a>
+      <a href="/#contacts">Контакты</a>
+      <a href="/#contacts" class="nav-cta">Связаться</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Меню навигации" aria-expanded="false">Меню</button>
+  </div>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-ghost" aria-hidden="true">PS</div>
+  <div class="wrap">
+    <span class="eyebrow">Наши адреса</span>
+    <h1>Склады<br>и офисы</h1>
+    <p class="lead">Приезжайте в удобное время — покажем весь ассортимент, проконсультируем и поможем с выбором материалов.</p>
+  </div>
+</section>
+
+<!-- BRANCHES -->
+<section class="branches">
+  <div class="wrap">
+    <div class="reveal">
+      <span class="eyebrow" style="color:var(--red-ink)">
+        <span style="width:34px;height:2px;background:var(--red);display:inline-block"></span>
+        Филиалы
+      </span>
+      <h2 style="font-weight:900;font-size:clamp(2.4rem,5vw,4rem);text-transform:uppercase;color:var(--navy);margin-top:18px;line-height:.95">
+        Найдите нас<br>в Нукусе
+      </h2>
+    </div>
+
+    <div class="branches-grid">
+
+      <!-- Branch 1 — Main -->
+      <div class="branch-card reveal d1">
+        <img
+          class="branch-img"
+          src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=700&q=80"
+          alt="Главный склад Paint Spring"
+          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+        >
+        <div class="branch-img-placeholder" style="display:none"><span>PS</span></div>
+        <div class="branch-body">
+          <span class="branch-badge">Главный офис и склад</span>
+          <h3>Нукус — Центральный</h3>
+          <p class="branch-district">Район: 60-летия Каракалпакстана</p>
+          <div class="branch-rows">
+            <div class="branch-row">
+              <div class="lbl">Адрес</div>
+              <div class="val">ул. 60-летия Каракалпакстана, 17/1</div>
+            </div>
+            <div class="branch-row">
+              <div class="lbl">Телефон</div>
+              <div class="val"><a href="tel:+998913034777">+998 (91) 303-47-77</a></div>
+            </div>
+            <div class="branch-row">
+              <div class="lbl">Режим работы</div>
+              <div class="val">Пн–Вс · 09:00 — 18:00</div>
+              <div class="sub">Без выходных</div>
+            </div>
+          </div>
+          <a href="https://maps.google.com/?q=Нукус,+ул.+60-летия+Каракалпакстана,+17/1" target="_blank" rel="noopener noreferrer" class="branch-cta">
+            Открыть на карте →
+          </a>
+        </div>
+      </div>
+
+      <!-- Coming soon cards -->
+      <div class="branch-card reveal d2" style="opacity:.55">
+        <div class="branch-img-placeholder" style="display:flex">
+          <span>?</span>
+        </div>
+        <div class="branch-body">
+          <span class="branch-badge" style="color:var(--gray)">Скоро открытие</span>
+          <h3 style="color:var(--gray)">Филиал 2</h3>
+          <p class="branch-district">Адрес уточняется</p>
+          <div class="branch-rows">
+            <div class="branch-row">
+              <div class="lbl">Статус</div>
+              <div class="val" style="font-size:1.1rem;color:var(--gray)">В разработке</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="branch-card reveal d3" style="opacity:.55">
+        <div class="branch-img-placeholder" style="display:flex">
+          <span>?</span>
+        </div>
+        <div class="branch-body">
+          <span class="branch-badge" style="color:var(--gray)">Скоро открытие</span>
+          <h3 style="color:var(--gray)">Филиал 3</h3>
+          <p class="branch-district">Адрес уточняется</p>
+          <div class="branch-rows">
+            <div class="branch-row">
+              <div class="lbl">Статус</div>
+              <div class="val" style="font-size:1.1rem;color:var(--gray)">В разработке</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- MAP -->
+<section class="map-section">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Мы на карте</span>
+      <h2>Главный<br>склад</h2>
+    </div>
+    <div class="map-wrapper reveal d1">
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2888.0!2d59.6079!3d42.4619!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDLCsDI3JzQyLjgiTiA1OcKwMzYnMjguNCJF!5e0!3m2!1sru!2suz!4v1700000000000"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Paint Spring на карте">
+      </iframe>
+      <div class="map-overlay-badge">PAINT<span>SPRING</span> · г. Нукус</div>
+    </div>
+  </div>
+</section>
+
+<!-- SOCIALS STRIP -->
+<section class="socials-strip">
+  <div class="wrap">
+    <div class="left reveal">
+      <h2>Есть вопросы?<br>Пишите нам</h2>
+      <p>Ответим в Instagram или по телефону в рабочее время</p>
+    </div>
+    <div class="social-links reveal d1">
+      <a href="https://www.instagram.com/Premium_Stroy_Nukus" target="_blank" rel="noopener noreferrer" class="social-btn insta">
+        Instagram @Premium_Stroy_Nukus
+      </a>
+      <a href="tel:+998913034777" class="social-btn phone">
+        Позвонить →
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap">
+    <a href="/" class="logo">PAINT<span style="color:var(--red)">SPRING</span></a>
+    <div class="footer-meta">© 2026 Paint Spring · Строительные материалы · г. Нукус</div>
+    <a href="https://www.instagram.com/Premium_Stroy_Nukus" target="_blank" rel="noopener noreferrer" style="font-weight:300;font-size:.84rem;letter-spacing:.03em;transition:color .25s" onmouseover="this.style.color='#fff'" onmouseout="this.style.color=''">
+      @Premium_Stroy_Nukus
+    </a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // Mobile nav toggle
+  var toggle = document.getElementById('navToggle');
+  var links = document.getElementById('navLinks');
+  toggle.addEventListener('click', function(){
+    var open = links.classList.toggle('open');
+    toggle.textContent = open ? 'Закрыть' : 'Меню';
+    toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  links.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      links.classList.remove('open');
+      toggle.textContent = 'Меню';
+      toggle.setAttribute('aria-expanded', 'false');
+    });
+  });
+
+  // Reveal on scroll
+  var reveals = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, {threshold:0.1, rootMargin:'0px 0px -50px 0px'});
+    reveals.forEach(function(el){ io.observe(el); });
+  } else {
+    reveals.forEach(function(el){ el.classList.add('in'); });
+  }
+})();
+</script>
+</body>
+</html>
