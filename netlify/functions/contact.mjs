@@ -1,25 +1,4 @@
-import pg from 'pg'
-
-const { Pool } = pg
-
-const pool = new Pool({ connectionString: process.env.DATABASE_URL })
-
-let tableReady = false
-async function ensureTable() {
-  if (tableReady) return
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS contact_submissions (
-      id SERIAL PRIMARY KEY,
-      name TEXT NOT NULL,
-      company TEXT NOT NULL,
-      phone TEXT NOT NULL,
-      category TEXT,
-      message TEXT,
-      created_at TIMESTAMPTZ DEFAULT NOW()
-    )
-  `)
-  tableReady = true
-}
+import { neon } from '@neondatabase/serverless'
 
 export const handler = async (event) => {
   if (event.httpMethod !== 'POST') {
@@ -39,11 +18,25 @@ export const handler = async (event) => {
   }
 
   try {
-    await ensureTable()
-    await pool.query(
-      'INSERT INTO contact_submissions (name, company, phone, category, message) VALUES ($1,$2,$3,$4,$5)',
-      [name.trim(), company.trim(), phone.trim(), category || null, message || null]
-    )
+    const sql = neon(process.env.DATABASE_URL)
+
+    await sql`
+      CREATE TABLE IF NOT EXISTS contact_submissions (
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        company TEXT NOT NULL,
+        phone TEXT NOT NULL,
+        category TEXT,
+        message TEXT,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      )
+    `
+
+    await sql`
+      INSERT INTO contact_submissions (name, company, phone, category, message)
+      VALUES (${name.trim()}, ${company.trim()}, ${phone.trim()}, ${category || null}, ${message || null})
+    `
+
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
@@ -51,6 +44,6 @@ export const handler = async (event) => {
     }
   } catch (err) {
     console.error('DB error:', err)
-    return { statusCode: 500, body: JSON.stringify({ error: 'Server error' }) }
+    return { statusCode: 500, body: JSON.stringify({ error: 'Server error', detail: err.message }) }
   }
 }
