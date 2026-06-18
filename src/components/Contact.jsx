@@ -44,6 +44,7 @@ export default function Contact() {
   const [form, setForm] = useState({ name: '', company: '', phone: '', category: '', message: '' })
   const [errors, setErrors] = useState({})
   const [sent, setSent] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
 
   const handlePhone = (e) => {
     setForm(f => ({ ...f, phone: formatPhone(e.target.value) }))
@@ -53,7 +54,7 @@ export default function Contact() {
     if (!form.phone) setForm(f => ({ ...f, phone: '+998 (' }))
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newErrors = {}
     if (!form.name.trim()) newErrors.name = true
     if (!form.company.trim()) newErrors.company = true
@@ -61,8 +62,22 @@ export default function Contact() {
     setErrors(newErrors)
     if (Object.keys(newErrors).length > 0) return
 
-    setSent(true)
-    setTimeout(() => setSent(false), 3000)
+    setSubmitting(true)
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      })
+      if (!res.ok) throw new Error('Server error')
+      setSent(true)
+      setForm({ name: '', company: '', phone: '', category: '', message: '' })
+      setTimeout(() => setSent(false), 3000)
+    } catch {
+      alert('Не удалось отправить заявку. Попробуйте позже.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   const inputClass = (field) =>
@@ -189,13 +204,16 @@ export default function Contact() {
             <button
               type="button"
               onClick={handleSubmit}
-              className={`w-full font-barlow font-bold text-[1.2rem] tracking-[.1em] uppercase text-white border-none py-[18px] mt-[6px] transition-all duration-300 cursor-pointer ${
+              disabled={submitting || sent}
+              className={`w-full font-barlow font-bold text-[1.2rem] tracking-[.1em] uppercase text-white border-none py-[18px] mt-[6px] transition-all duration-300 cursor-pointer disabled:pointer-events-none ${
                 sent
-                  ? 'bg-[#2e7d4f] pointer-events-none'
+                  ? 'bg-[#2e7d4f]'
+                  : submitting
+                  ? 'bg-navy opacity-70'
                   : 'bg-red hover:bg-navy'
               }`}
             >
-              {sent ? 'Сообщение отправлено' : 'Отправить сообщение'}
+              {sent ? 'Заявка принята!' : submitting ? 'Отправка...' : 'Отправить сообщение'}
             </button>
           </div>
         </div>
